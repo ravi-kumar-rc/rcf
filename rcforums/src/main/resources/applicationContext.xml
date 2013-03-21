@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<context:property-placeholder location="classpath:application.properties" ignore-unresolvable="true"/>
+	
+	<security:http auto-config="true" >
+		<security:intercept-url pattern="/**" access="ROLE_USER"/>
+		<security:form-login/>
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="ravi" password="password" authorities="ROLE_USER, ROLE_ADMIN"/>
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="configLocation">
+            <value>classpath:hibernate.cfg.xml</value>
+        </property>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+	<bean id="categoryService" class="com.riskcare.forums.server.service.CategoryService">
+		<property name="categoryDAO" ref="categoryDAO" />
+	</bean>
+
+	<bean id="authenticationService" class="com.riskcare.forums.server.service.AuthenticationServiceImpl" />
+	<bean id="categoryMapper" class="com.riskcare.forums.server.dao.category.CategoryMapper" />
+
+    <bean id="categoryView" class="com.riskcare.forums.client.ui.CategoryView">
+    	<property name="authenticationService" ref="authenticationService" />
+    	<property name="categoryService" ref="categoryService" />
+    	<property name="categoryMapper" ref="categoryMapper" />
+    </bean>
+	
+    <bean id="cpDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxIdleTime" value="${dbconnection.maxIdleTime}"/>
+        <property name="maxPoolSize" value="${dbconnection.maxPoolSize}"/>
+        <property name="minPoolSize" value="${dbconnection.minPoolSize}"/>
+        <property name="initialPoolSize" value="${dbconnection.initialPoolSize}"/>
+        <property name="maxStatements" value="${dbconnection.maxStatements}"/>
+        <property name="acquireIncrement" value="${dbconnection.acquireIncrement}"/>
+        <property name="idleConnectionTestPeriod" value="${dbconnection.idleConnectionTestPeriod}"/>
+        <property name="testConnectionOnCheckin" value="${dbconnection.testConnectionOnCheckin}"/>
+        <property name="preferredTestQuery" value="${dbconnection.preferredTestQuery}"/>
+        <property name="loginTimeout" value="${dbconnection.loginTimeout}"/>
+	        
+    </bean>
+	
+    <bean id="categoryDAO" class="com.riskcare.forums.server.dao.category.CategoryDAO" />
+        
+</beans>

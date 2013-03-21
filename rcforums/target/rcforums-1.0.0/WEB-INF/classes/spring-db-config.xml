@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+    <!--TODO org.apache.commons.dbcp.BasicDataSource" -->
+    <!-- 
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxIdleTime" value="${dbconnection.maxIdleTime}"/>
+        <property name="maxPoolSize" value="${dbconnection.maxPoolSize}"/>
+        <property name="minPoolSize" value="${dbconnection.minPoolSize}"/>
+        <property name="initialPoolSize" value="${dbconnection.initialPoolSize}"/>
+        <property name="maxStatements" value="${dbconnection.maxStatements}"/>
+        <property name="acquireIncrement" value="${dbconnection.acquireIncrement}"/>
+        <property name="idleConnectionTestPeriod" value="${dbconnection.idleConnectionTestPeriod}"/>
+        <property name="testConnectionOnCheckin" value="${dbconnection.testConnectionOnCheckin}"/>
+        <property name="preferredTestQuery" value="${dbconnection.preferredTestQuery}"/>
+        <property name="loginTimeout" value="${dbconnection.loginTimeout}"/>
+	        
+    </bean>
+	
+    <bean id="categoryDAO" class="com.riskcare.forums.server.dao.category.CategoryDAO" />
+	-->
+</beans>

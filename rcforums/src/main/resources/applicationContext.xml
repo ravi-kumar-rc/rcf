@@ -47,9 +47,6 @@
 	<bean id="categoryMapper" class="com.riskcare.forums.server.dao.category.CategoryMapper" />
 
     <bean id="categoryView" class="com.riskcare.forums.client.ui.CategoryView">
-    	<property name="authenticationService" ref="authenticationService" />
-    	<property name="categoryService" ref="categoryService" />
-    	<property name="categoryMapper" ref="categoryMapper" />
     </bean>
 	
     <bean id="cpDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">

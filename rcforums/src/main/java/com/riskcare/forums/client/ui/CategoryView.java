@@ -1,15 +1,15 @@
 package com.riskcare.forums.client.ui;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.riskcare.forums.server.dao.category.CategoryMapper;
-import com.riskcare.forums.server.service.AuthenticationService;
+import com.riskcare.forums.client.request.CategoryCreationRpc;
+import com.riskcare.forums.client.ui.dialog.InputDialog;
 import com.riskcare.forums.server.service.CategoryCreationService;
-import com.riskcare.forums.server.service.CategoryService;
-import com.riskcare.forums.server.vo.CategoryVO;
+import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.server.ClientConnector.AttachEvent;
+import com.vaadin.server.ClientConnector.AttachListener;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Tree;
@@ -24,12 +24,10 @@ public class CategoryView extends AbstractComponentConnector implements Button.C
     
     private VerticalLayout layout = new VerticalLayout();
     
+    public CategoryCreationRpc categoryCreationRpc = RpcProxy.create(CategoryCreationRpc.class, this);
+    
     private Tree categoryTree = new Tree();
     
-    private AuthenticationService authenticationService;
-    private CategoryService categoryService;
-    private CategoryMapper categoryMapper;
-
     private final Button btnCreate = new Button("Create");
     
     public CategoryView() {
@@ -37,12 +35,22 @@ public class CategoryView extends AbstractComponentConnector implements Button.C
     
     public VerticalLayout initialize() {
     	
+    	categoryTree.setImmediate(true);
+    	
     	buildCategoryTree();
     	
     	return layout;
     }
     
     public void buildCategoryTree() {
+    	layout.addAttachListener(new AttachListener() {
+
+			@Override
+			public void attach(AttachEvent event) {
+	        	categoryCreationRpc.buildRoot();				
+			}
+    		
+    	});
         btnCreate.addClickListener(this);
         layout.addComponent(btnCreate);
         layout.addComponent(categoryTree);
@@ -50,35 +58,13 @@ public class CategoryView extends AbstractComponentConnector implements Button.C
     
     public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
         LOG.info("Validating root category");
-        if(!categoryService.rootAvailable()) {
-            CategoryVO vo = new CategoryVO("rcf", "root", DateTime.now(),authenticationService.getUser().getUsername(),"");
-            categoryService.loadCategory(vo);
+        String selectedNode = (String) categoryTree.getValue();
+        if(selectedNode != null) {
+        	InputDialog inputDialog = new InputDialog();
+        	
+        	categoryCreationRpc.buildTree(categoryTree.getValue().toString(),"", "null");
         }
         LOG.info("Building the category tree...");
-    }
-    
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
-    
-    public CategoryService getCategoryService() {
-        return categoryService;
-    }
-
-    public void setCategoryMapper(CategoryMapper categoryMapper) {
-        this.categoryMapper = categoryMapper;
-    }
-    
-    public CategoryMapper getCategoryMapper() {
-        return categoryMapper;
-    }
-    
-    public void setAuthenticationService(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
-    }
-    
-    public AuthenticationService getAuthenticationService() {
-        return authenticationService;
     }
 
 }

@@ -16,7 +16,7 @@ public class RCFCategoryManagement extends VerticalLayout {
     public void initLayout() {
         
         HorizontalLayout subLayout = new HorizontalLayout();
-        subLayout.setMargin(true,true,true,true);
+        subLayout.setMargin(true);
         
         subLayout.addComponent(categoryView);
         addComponent(subLayout);

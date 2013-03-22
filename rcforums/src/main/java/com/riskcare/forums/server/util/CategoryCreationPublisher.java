@@ -15,7 +15,6 @@ public class CategoryCreationPublisher implements ApplicationEventPublisherAware
     /**
      * Sets the application event publisher
      */
-    @Override
     public void setApplicationEventPublisher(
             ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;

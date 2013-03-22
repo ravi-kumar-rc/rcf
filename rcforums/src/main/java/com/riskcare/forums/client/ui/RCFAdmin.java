@@ -15,7 +15,7 @@ public class RCFAdmin extends VerticalLayout {
         tabs.addTab(new RCFCategoryManagement(), "Category Management");
         tabs.addTab(new RCFPostManagement(), "Post Management");
         
-        setMargin(true,true,true,true);
+        setMargin(true);
         setStyleName(Runo.PANEL_LIGHT);
         addComponent(tabs);
     }

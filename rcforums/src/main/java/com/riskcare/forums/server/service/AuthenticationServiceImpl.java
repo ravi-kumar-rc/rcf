@@ -5,19 +5,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.riskcare.forums.server.user.User;
+
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     Logger LOG = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
     
-    public String getUsername() {
+    public User getUser() {
         
+    	User user = new User();
+    	
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
         if(authentication == null) {
             LOG.error("Not logged in");
-            return null;
+            return user;
         }
         
-        return authentication.getName();
+        user.setUsername(authentication.getPrincipal().toString());
+        return user;
     }
 }

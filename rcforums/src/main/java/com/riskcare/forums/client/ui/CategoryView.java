@@ -1,70 +1,118 @@
 package com.riskcare.forums.client.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.riskcare.forums.client.request.CategoryCreationRpc;
-import com.riskcare.forums.client.ui.dialog.InputDialog;
-import com.riskcare.forums.server.service.CategoryCreationService;
-import com.vaadin.client.communication.RpcProxy;
-import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.server.ClientConnector.AttachEvent;
-import com.vaadin.server.ClientConnector.AttachListener;
-import com.vaadin.shared.ui.Connect;
+import com.riskcare.forums.server.vo.CategoryVO;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.VerticalLayout;
 
-@Connect(CategoryCreationService.class)
-public class CategoryView extends AbstractComponentConnector implements Button.ClickListener {
+public class CategoryView implements Button.ClickListener, ItemClickListener, ItemSetChangeListener {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(CategoryView.class);
+    private HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
+	private GridLayout gridLayout = new GridLayout(2,4);
     
-    private VerticalLayout layout = new VerticalLayout();
+    private Label lblParent = new Label("Parent category: ");
+    private TextField txtParent = new TextField();
+    private Label lblName = new Label("New category name <font color=\"red\"><b>*</b></font>: ", ContentMode.HTML);
+    private TextField txtName = new TextField();
+    private Label lblDesc = new Label("New category description: ");
+    private TextField txtDesc = new TextField();
     
-    public CategoryCreationRpc categoryCreationRpc = RpcProxy.create(CategoryCreationRpc.class, this);
-    
-    private Tree categoryTree = new Tree();
+    private CategoryTree categoryTree;
+    private Tree tree; 
+    private CategoryVO selectedCategory;
     
     private final Button btnCreate = new Button("Create");
     
     public CategoryView() {
     }
     
-    public VerticalLayout initialize() {
-    	
-    	categoryTree.setImmediate(true);
+    public HorizontalSplitPanel initialize() {
     	
     	buildCategoryTree();
+    	buildCategoryPanel();
+    	splitPanel.setSizeFull();
+    	splitPanel.setFirstComponent(gridLayout);
+    	splitPanel.setSecondComponent(tree);
     	
-    	return layout;
+    	
+    	return splitPanel;
     }
     
-    public void buildCategoryTree() {
-    	layout.addAttachListener(new AttachListener() {
+    private void buildCategoryTree() {
+    	tree = categoryTree.initialize();
+    	tree.addItemClickListener(this);
+    	btnCreate.addClickListener(this);
+    }
 
-			@Override
-			public void attach(AttachEvent event) {
-	        	categoryCreationRpc.buildRoot();				
-			}
-    		
-    	});
-        btnCreate.addClickListener(this);
-        layout.addComponent(btnCreate);
-        layout.addComponent(categoryTree);
+    private void buildCategoryPanel() {
+    	
+    	txtParent.setEnabled(false);
+    	
+    	gridLayout.setMargin(true);
+    	gridLayout.addComponent(lblParent);
+    	gridLayout.addComponent(txtParent);
+    	gridLayout.addComponent(lblName);
+    	gridLayout.addComponent(txtName);
+    	gridLayout.addComponent(lblDesc);
+    	gridLayout.addComponent(txtDesc);
+    	gridLayout.addComponent(btnCreate);
     }
     
+	@Override
+	public void itemClick(ItemClickEvent event) {
+		selectedCategory = (CategoryVO) event.getItemId();
+		txtParent.setValue(selectedCategory.getCategoryName());
+	}
+    
+    @Override
     public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
-        LOG.info("Validating root category");
-        String selectedNode = (String) categoryTree.getValue();
-        if(selectedNode != null) {
-        	InputDialog inputDialog = new InputDialog();
-        	
-        	categoryCreationRpc.buildTree(categoryTree.getValue().toString(),"", "null");
-        }
-        LOG.info("Building the category tree...");
+    	
+    	if(selectedCategory == null) {
+    		Notification.show("Error", "Please select a parent category from the tree", Notification.Type.ERROR_MESSAGE);
+    	} else {
+    		if(txtName.getValue().trim().length() == 0) {
+    			Notification.show("Error", "Please enter a valid category name", Notification.Type.ERROR_MESSAGE);
+    		} else {
+    			btnCreate.setEnabled(false);
+    			resetFields();
+    			String catName = txtName.getValue();
+    			String catDesc = txtDesc.getValue();
+    			String catParent = txtParent.getValue();
+    			categoryTree.addItem(catName, catDesc, catParent);
+    			tree=categoryTree.initialize();
+    			Notification.show("Info", "The category is now added",Notification.Type.HUMANIZED_MESSAGE);
+    			btnCreate.setEnabled(true);
+    		}
+    	}
     }
+
+    public void resetFields() {
+    	txtName.setValue("");
+    	txtDesc.setValue("");
+    	txtParent.setValue("");
+    }
+    
+	public CategoryTree getCategoryTree() {
+		return categoryTree;
+	}
+
+	public void setCategoryTree(CategoryTree categoryTree) {
+		this.categoryTree = categoryTree;
+	}
+
+	@Override
+	public void containerItemSetChange(ItemSetChangeEvent event) {
+	}
 
 }

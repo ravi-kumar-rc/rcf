@@ -25,6 +25,44 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 	
+	<context:annotation-config />
+	
+	<bean id="rcf" class="com.riskcare.forums.client.RCF">
+		<property name="mainView" ref="mainView" />
+	</bean>
+	
+	<bean id="mainView" class="com.riskcare.forums.client.RCFMainView">
+		<property name="rcfAdmin" ref="rcfAdmin" />
+	</bean>
+	
+	<bean id="rcfAdmin" class="com.riskcare.forums.client.ui.RCFAdmin">
+		<property name="categoryManagement" ref="categoryManagement" />
+		<property name="postManagement" ref="postManagement" />
+	</bean>
+	
+	<bean id="categoryManagement" class="com.riskcare.forums.client.ui.RCFCategoryManagement">
+		<property name="categoryView" ref="categoryView"/>
+	</bean>
+	
+	<bean id="postManagement" class="com.riskcare.forums.client.ui.RCFPostManagement" />
+	
+	<bean id="categoryView" class="com.riskcare.forums.client.ui.CategoryView">
+		<property name="categoryTree" ref="categoryTree" />
+	</bean>
+	
+	<bean id="categoryTree" class="com.riskcare.forums.client.ui.CategoryTree">
+		<property name="categoryContainerController" ref="categoryContainerController" />
+	</bean>
+	
+	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController" >
+		<property name="categoryService" ref="categoryService" />
+		<property name="clientFactory" ref="clientFactory" />
+	</bean>
+	
+	<bean id="clientFactory" class="com.riskcare.forums.client.RCFClientFactoryImpl">
+		<property name="authenticationService" ref="authenticationService" />
+	</bean>
+	
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc.driverClassName}"/>
         <property name="url" value="${jdbc.url}"/>
@@ -37,6 +75,11 @@
             <value>classpath:hibernate.cfg.xml</value>
         </property>
         <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan">
+            <list>
+                <value>com.riskcare.forums.server.entity</value>
+            </list>
+        </property>        
     </bean>
     
 	<bean id="categoryService" class="com.riskcare.forums.server.service.CategoryService">
@@ -46,9 +89,6 @@
 	<bean id="authenticationService" class="com.riskcare.forums.server.service.AuthenticationServiceImpl" />
 	<bean id="categoryMapper" class="com.riskcare.forums.server.dao.category.CategoryMapper" />
 
-    <bean id="categoryView" class="com.riskcare.forums.client.ui.CategoryView">
-    </bean>
-	
     <bean id="cpDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 
         <property name="driverClass" value="${jdbc.driverClassName}"/>
@@ -68,6 +108,8 @@
 	        
     </bean>
 	
-    <bean id="categoryDAO" class="com.riskcare.forums.server.dao.category.CategoryDAO" />
+    <bean id="categoryDAO" class="com.riskcare.forums.server.dao.category.CategoryDAO">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
         
 </beans>

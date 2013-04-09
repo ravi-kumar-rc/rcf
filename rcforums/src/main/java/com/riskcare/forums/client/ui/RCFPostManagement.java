@@ -6,4 +6,6 @@ public class RCFPostManagement extends VerticalLayout{
 
     private static final long serialVersionUID = 1L;
 
+    public RCFPostManagement() {
+    }
 }

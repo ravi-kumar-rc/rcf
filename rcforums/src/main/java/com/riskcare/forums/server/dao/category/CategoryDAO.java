@@ -14,15 +14,19 @@ import com.riskcare.forums.server.entity.Category;
 public class CategoryDAO extends GenericDAO<Category> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CategoryDAO.class);
-    private final String RCF_CATEGORY_ROOT = "rcf";
+    private final String RCF_CATEGORY_ROOT = "RCF";
     
-    public List<Category> findAll() {
+    public CategoryDAO() {
+    }
+    
+	@SuppressWarnings("unchecked")
+	public synchronized List<Category> findAll() {
         
         List<Category> categories = null;
         try {
             Session session = getSession();
             Criteria crit = session.createCriteria(Category.class);
-            categories = crit.list();
+            categories = (List<Category>)crit.list();
         } catch(Exception e) {
             LOG.error(e.getMessage());
         }

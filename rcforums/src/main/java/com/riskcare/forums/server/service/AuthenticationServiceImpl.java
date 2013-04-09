@@ -22,7 +22,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return user;
         }
         
-        user.setUsername(authentication.getPrincipal().toString());
+        user.setUsername(authentication.getName());
         return user;
     }
 }

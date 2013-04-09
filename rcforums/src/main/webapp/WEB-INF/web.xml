@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+			xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+			xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+			id="WebApp_ID" version="2.5" metadata-complete="true">
 	<display-name>Vaadin Web Application</display-name>
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -14,11 +17,20 @@
 	</context-param>
 	<servlet>
 		<servlet-name>Vaadin Application Servlet</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.riskcare.forums.client.RCFServlet</servlet-class>
 		<init-param>
-			<description>Vaadin application class to start</description>
-			<param-name>application</param-name>
-			<param-value>com.riskcare.forums.client.RCF</param-value>
+			<param-name>closeIdleSessions</param-name>
+			<param-value>true</param-value>
+		</init-param>
+        <init-param>
+            <description>Vaadin UIProvider class name</description>
+            <param-name>UIProvider</param-name>
+            <param-value>com.riskcare.forums.client.RCFUIProvider</param-value>
+        </init-param>		
+		<init-param>
+			<description>Vaadin application bean to start</description>
+			<param-name>UIBean</param-name>
+			<param-value>rcf</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -39,5 +51,8 @@
     </listener>
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-    </listener>	
+    </listener>
+	<listener>
+        <listener-class>com.riskcare.forums.client.ApplicationContextListener</listener-class>
+    </listener>
 </web-app>

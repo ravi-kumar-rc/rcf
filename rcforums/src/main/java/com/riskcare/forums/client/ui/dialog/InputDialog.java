@@ -23,5 +23,9 @@ public class InputDialog extends Window {
 		gl.addComponent(btnOK);
 		gl.addComponent(btnCancel);
 	}
-
+	
+	public void show() {
+		show();
+		setModal(true);
+	}
 }

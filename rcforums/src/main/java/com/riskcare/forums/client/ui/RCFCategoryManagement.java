@@ -1,25 +1,31 @@
 package com.riskcare.forums.client.ui;
 
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.server.Page;
 import com.vaadin.ui.VerticalLayout;
 
-public class RCFCategoryManagement extends VerticalLayout {
+public class RCFCategoryManagement {
 
-    private static final long serialVersionUID = 1L;
-    
-    private final CategoryView categoryView = new CategoryView();
+    private CategoryView categoryView;
     
     public RCFCategoryManagement() {
-        initLayout();
     }
     
-    public void initLayout() {
+    public VerticalLayout build() {
+    	VerticalLayout layout = new VerticalLayout();
+		layout.setHeight("" + (Page.getCurrent().getBrowserWindowHeight() -160));
+		layout.setMargin(true);
+    	
+        layout.addComponent(categoryView.initialize());
         
-        HorizontalLayout subLayout = new HorizontalLayout();
-        subLayout.setMargin(true);
-        
-        subLayout.addComponent(categoryView.initialize());
-        addComponent(subLayout);
+        return layout;
     }
+
+	public CategoryView getCategoryView() {
+		return categoryView;
+	}
+
+	public void setCategoryView(CategoryView categoryView) {
+		this.categoryView = categoryView;
+	}
     
 }

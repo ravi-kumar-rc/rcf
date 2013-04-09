@@ -1,53 +1,51 @@
 package com.riskcare.forums.client;
 
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.riskcare.forums.client.request.proxy.UserProxy;
 import com.riskcare.forums.client.ui.RCFAdmin;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.server.Page;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
-public class RCFMainView extends VerticalLayout {
+public class RCFMainView {
 
-	private static final long serialVersionUID = 1L;
+	private RCFAdmin rcfAdmin;
 	
-	private final ClientFactory clientFactory;
-    
-    public RCFMainView(final ClientFactory clientFactory) {
-    	
-    	this.clientFactory = clientFactory;
-    	
-    	init();
+    public RCFMainView() {
     }
     
-    public void init()
+    public VerticalLayout build()
     {
-        final Label lblCaption = new Label("<h1>Riskcare Forums</h1>", ContentMode.HTML);
-        
-        final Label lblUser = new Label();
+    	VerticalLayout layout = new VerticalLayout();
+		layout.setHeight(""+Page.getCurrent().getBrowserWindowHeight());
+    	layout.setMargin(true);
+//        Label lblCaption = new Label("<h1>Riskcare Forums</h1>", ContentMode.HTML);
+//        lblCaption.setSizeUndefined();
+//        
+//        Label lblUser = new Label(); //.getAuthenticationService().getUser().toString());
 
-    	clientFactory.getRequestFactory().getAuthenticationRequest().getUser().fire(new Receiver<UserProxy>() {
-    		@Override
-    		public void onSuccess(UserProxy response) {
-    			lblUser.setValue(response.getUsername());
-    		}
-    	});
-        
-        
         TabSheet tabs = new TabSheet();
-        tabs.addTab(new RCFAdmin(), "Administration");
+        tabs.setSizeFull();
+        tabs.addStyleName(Reindeer.TABSHEET_BORDERLESS);
+        tabs.addTab(rcfAdmin.build(), "Administration");
 
-        HorizontalLayout header = new HorizontalLayout();
-        header.setSpacing(true);
+//        HorizontalLayout header = new HorizontalLayout();
+//        header.setSpacing(true);
         
-        header.addComponent(lblCaption);
-        header.addComponent(lblUser);
-        header.setComponentAlignment(lblUser, Alignment.MIDDLE_RIGHT);
+        //header.addComponent(lblCaption);
+        //header.addComponent(lblUser);
+        //header.setComponentAlignment(lblUser, Alignment.MIDDLE_RIGHT);
         
-        addComponent(header);
-        addComponent(tabs);
-    }	
+        layout.addComponent(tabs);
+        
+        return layout;
+    }
+
+	public RCFAdmin getRcfAdmin() {
+		return rcfAdmin;
+	}
+
+	public void setRcfAdmin(RCFAdmin rcfAdmin) {
+		this.rcfAdmin = rcfAdmin;
+	}
+    
 }

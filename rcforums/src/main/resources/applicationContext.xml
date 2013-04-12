@@ -21,6 +21,7 @@
 		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="ravi" password="password" authorities="ROLE_USER, ROLE_ADMIN"/>
+				<security:user name="kumar" password="password" authorities="ROLE_USER, ROLE_ADMIN"/>
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>

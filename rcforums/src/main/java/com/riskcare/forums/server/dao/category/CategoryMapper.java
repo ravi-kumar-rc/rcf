@@ -7,11 +7,11 @@ public class CategoryMapper {
     
     public CategoryVO entityToVo(Category entity) {
         return new CategoryVO(entity.getCategoryName(), entity.getCategoryDesc(), 
-                entity.getCategoryDate(), entity.getCategoryCreator(), entity.getCategoryParent());
+                entity.getCategoryCreateDate(), entity.getCategoryCreator(), entity.getCategoryParent(), entity.getCategoryModifiedDate());
     }
     
     public Category voToEntity(CategoryVO vo) {
-        return new Category(vo.getCategoryName(), vo.getCategoryDesc(), vo.getCategoryDate(),
-                vo.getCategoryCreator(), vo.getCategoryParent());
+        return new Category(vo.getCategoryName(), vo.getCategoryDesc(), vo.getCategoryCreateDate(),
+                vo.getCategoryCreator(), vo.getCategoryParent(), vo.getCategoryModifiedDate());
     }
 }

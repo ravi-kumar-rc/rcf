@@ -19,7 +19,7 @@ public class CategoryService {
     
     private CategoryDAO categoryDAO;
     
-    public synchronized void loadCategory(CategoryVO categoryVO) {
+    public synchronized void createCategory(CategoryVO categoryVO) {
         Transaction transaction = null;
         
         try {
@@ -33,6 +33,47 @@ public class CategoryService {
         		LOG.error("Category DAO is null");
         		LOG.error(e.getMessage());
         	}
+        } finally {
+        	categoryDAO.closeSession();
+        }
+    }
+    
+    public synchronized void updateCategory(CategoryVO actualCategory, CategoryVO updatedCategory) {
+        Transaction transaction = null;
+        
+        try {
+            Session session = categoryDAO.getSession();
+            transaction = categoryDAO.startTransaction(session);
+            Category actCategory = new CategoryMapper().voToEntity(actualCategory);
+            Category updCategory = new CategoryMapper().voToEntity(updatedCategory);
+            categoryDAO.updateCategory(actCategory, updCategory);
+            categoryDAO.commitTransaction(transaction);
+        } catch(Exception e) {
+        	if(categoryDAO == null) {
+        		LOG.error("Category DAO is null");
+        		LOG.error(e.getMessage());
+        	}
+        } finally {
+        	categoryDAO.closeSession();
+        }
+    }
+    
+    public synchronized void deleteCategory(CategoryVO category) {
+        Transaction transaction = null;
+        
+        try {
+            Session session = categoryDAO.getSession();
+            transaction = categoryDAO.startTransaction(session);    		
+            Category delCategory = new CategoryMapper().voToEntity(category);
+    		categoryDAO.deleteCategory(delCategory);
+    		categoryDAO.commitTransaction(transaction);
+    	} catch(Exception e) {
+    		if(categoryDAO == null) {
+    			LOG.error("Category DAO is null");
+    			LOG.error(e.getMessage());
+    		}
+    	} finally {
+        	categoryDAO.closeSession();
         }
     }
     
@@ -63,9 +104,10 @@ public class CategoryService {
     		categoryVO = new CategoryVO();
     		categoryVO.setCategoryName(category.getCategoryName());
     		categoryVO.setCategoryDesc(category.getCategoryDesc());
-    		categoryVO.setCategoryDate(category.getCategoryDate());
+    		categoryVO.setCategoryCreateDate(category.getCategoryCreateDate());
     		categoryVO.setCategoryCreator(category.getCategoryCreator());
     		categoryVO.setCategoryParent(category.getCategoryParent());
+    		categoryVO.setCategoryModifiedDate(category.getCategoryModifiedDate());
     		categories.add(categoryVO);
     	}
     	

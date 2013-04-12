@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -40,9 +41,20 @@ public abstract class GenericDAO<T> {
             session1.delete(item);
         } catch (final HibernateException e) {
             throw new Exception(e.getMessage(), e);
-        }finally{
-            closeSession();
         }
+        
+        /*
+        Session session = getSession();
+        Object root = null;
+        try {
+            Criteria criteria = session.createCriteria(Category.class);
+            criteria.add(Restrictions.eq("categoryName",RCF_CATEGORY_ROOT));
+            root = criteria.uniqueResult(); 
+        } catch(Exception e) {
+            LOG.error(e.getMessage());
+        }
+        return root;        
+        */
     }
 
     /**
@@ -64,8 +76,6 @@ public abstract class GenericDAO<T> {
             }
         } catch (final HibernateException e) {
             throw new Exception(e.getMessage(), e);
-        }finally{
-            closeSession();
         }
     } 
     
@@ -138,6 +148,31 @@ public abstract class GenericDAO<T> {
         } 
     }
     
+    
+    public void update(T item, Session session) throws Exception {
+    	try {
+    		session.update(item);
+    	} catch(final HibernateException e) {
+    		throw new Exception(e.getMessage(), e);
+    	}
+    }
+    
+    public void updateAll(List<T> itemList, Session session) throws Exception {
+        Session session1 = null;
+        try {
+            if( session == null || !session.isOpen() ){
+                session1 = getSession();
+            }else{
+                session1 = session;
+            }
+            for(T item: itemList){
+                session1.update(item);
+            }
+            session1.flush();
+        } catch (final HibernateException e) {
+            throw new Exception(e.getMessage(), e);
+        }
+    }
     /**
      * Saves all items in the argument list
      * @param item

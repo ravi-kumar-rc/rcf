@@ -12,7 +12,7 @@ public class RCFCategoryManagement {
     
     public VerticalLayout build() {
     	VerticalLayout layout = new VerticalLayout();
-		layout.setHeight("" + (Page.getCurrent().getBrowserWindowHeight() -160));
+		layout.setHeight("" + (Page.getCurrent().getBrowserWindowHeight()-200));
 		layout.setMargin(true);
     	
         layout.addComponent(categoryView.initialize());

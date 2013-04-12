@@ -10,7 +10,7 @@
         <property name="hibernate.dialect">com.riskcare.forums.server.dao.DatabaseServerDialect</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.connection.release_mode">auto</property>
-        <property name="hibernate.connection.autocommit">true</property>
+        <property name="hibernate.connection.autocommit">false</property>
         <!-- <property name="hibernate.hbm2ddl.auto">create-drop</property> -->
         <property name="hibernate.id.new_generator_mappings">true</property>
         <!--  <property name="hibernate.jdbc.batch_size">20</property>

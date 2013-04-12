@@ -3,7 +3,6 @@ package com.riskcare.forums.client.ui;
 import com.vaadin.server.Page;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
 
 public class RCFAdmin {
@@ -19,15 +18,15 @@ public class RCFAdmin {
     
     public VerticalLayout build() {
     	VerticalLayout layout = new VerticalLayout();
-		layout.setHeight(""+ (Page.getCurrent().getBrowserWindowHeight() - 80));
+		layout.setHeight(""+ (Page.getCurrent().getBrowserWindowHeight() - 110));
 		layout.setMargin(true);
     	
 		tabs.setSizeFull();
-		tabs.addStyleName(Reindeer.TABSHEET_BORDERLESS);
+        tabs.addStyleName(Runo.TABSHEET_SMALL);
         tabs.addTab(categoryManagement.build(), "Category Management");
         tabs.addTab(postManagement, "Post Management");
         
-        layout.setStyleName(Runo.PANEL_LIGHT);
+        layout.setStyleName(Runo.LAYOUT_DARKER);
         layout.addComponent(tabs);
     	
         return layout;

@@ -26,12 +26,13 @@
             <description>Vaadin UIProvider class name</description>
             <param-name>UIProvider</param-name>
             <param-value>com.riskcare.forums.client.RCFUIProvider</param-value>
-        </init-param>		
+        </init-param>
 		<init-param>
 			<description>Vaadin application bean to start</description>
 			<param-name>UIBean</param-name>
 			<param-value>rcf</param-value>
 		</init-param>
+		 
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Vaadin Application Servlet</servlet-name>
@@ -52,7 +53,5 @@
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
-	<listener>
-        <listener-class>com.riskcare.forums.client.ApplicationContextListener</listener-class>
-    </listener>
+
 </web-app>

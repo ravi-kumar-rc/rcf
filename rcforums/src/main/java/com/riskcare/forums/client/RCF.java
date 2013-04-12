@@ -15,14 +15,13 @@
  */
 package com.riskcare.forums.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.themes.Runo;
 
 
 /**
@@ -30,24 +29,20 @@ import com.vaadin.ui.UI;
  */
 
 @SuppressWarnings("serial")
-@Theme("reindeer")
-@Component
+@Theme(Runo.THEME_NAME)
+@Component("rcf")
 @Scope("request")
 public class RCF extends UI
 {
-	private static final Logger LOG = LoggerFactory.getLogger(RCF.class);
-	
 	private RCFMainView mainView;
 	
-	@Scope("request")
 	@Override
 	protected void init(VaadinRequest request) {
-		LOG.info("Initializing the application");
-		String str = (mainView == null)?"null":mainView.toString();
-		LOG.info("Main view object: " + str);
+		setCurrent(this);
 		setContent(mainView.build());
 	}
 
+	
 	public RCFMainView getMainView() {
 		return mainView;
 	}

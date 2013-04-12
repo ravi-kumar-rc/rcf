@@ -29,8 +29,19 @@ public class CategoryContainerController {
 	}
 	
 	public void addCategory(String name, String desc, String parent) {
-		CategoryVO newCategory = new CategoryVO(name, desc, DateTime.now(), clientFactory.getAuthenticationService().getUser().getUsername(), parent);
-		categoryService.loadCategory(newCategory);
+		CategoryVO newCategory = new CategoryVO(name, desc, DateTime.now(), clientFactory.getAuthenticationService().getUser().getUsername(), 
+				parent, DateTime.now());
+		categoryService.createCategory(newCategory);
+	}
+	
+	public void updateCategory(String name, String desc, CategoryVO actualCategory) {
+		CategoryVO updatedCategory = new CategoryVO(name, desc, actualCategory.getCategoryCreateDate(), actualCategory.getCategoryCreator(), 
+				actualCategory.getCategoryParent(), DateTime.now());
+		categoryService.updateCategory(actualCategory, updatedCategory);
+	}
+	
+	public void deleteCategory(CategoryVO category) {
+		categoryService.deleteCategory(category);
 	}
 	
 	public void removeCategory(String name, String desc, String parent) {
@@ -55,8 +66,8 @@ public class CategoryContainerController {
 			categories = categoryService.findAll();
 		} else {
 			CategoryVO rootCategory = new CategoryVO("RCF","Root Category",DateTime.now(),
-					clientFactory.getAuthenticationService().getUser().getUsername(),null);
-			categoryService.loadCategory(rootCategory);
+					clientFactory.getAuthenticationService().getUser().getUsername(),null, DateTime.now());
+			categoryService.createCategory(rootCategory);
 			categories = categoryService.findAll();
 		}		
 		

@@ -29,6 +29,14 @@ public class CategoryTree {
 		categoryContainerController.addCategory(name, desc, parent);
 	}
 	
+	public void updateItem(String name, String desc, CategoryVO actualCategory) {
+		categoryContainerController.updateCategory(name, desc, actualCategory);
+	}
+	
+	public void deleteItem(CategoryVO category) {
+		categoryContainerController.deleteCategory(category);
+	}
+	
 	public CategoryContainerController getCategoryContainerController() {
 		return categoryContainerController;
 	}

@@ -5,6 +5,7 @@ import com.vaadin.server.Page;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.Runo;
 
 public class RCFMainView {
 
@@ -25,6 +26,7 @@ public class RCFMainView {
 
         TabSheet tabs = new TabSheet();
         tabs.setSizeFull();
+        tabs.addStyleName(Runo.TABSHEET_SMALL);
         tabs.addStyleName(Reindeer.TABSHEET_BORDERLESS);
         tabs.addTab(rcfAdmin.build(), "Administration");
 

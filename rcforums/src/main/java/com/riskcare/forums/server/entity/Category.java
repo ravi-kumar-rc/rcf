@@ -14,7 +14,7 @@ import org.joda.time.DateTime;
 
 
 @Entity()
-@Table(name="CATEGORY", uniqueConstraints={@UniqueConstraint(name="CATEGORY_NAME_DATE_UN", columnNames={"NAME","DATE"})})
+@Table(name="CATEGORY", uniqueConstraints={@UniqueConstraint(name="CATEGORY_NAME_UN", columnNames={"NAME"})})
 public class Category {
 
     @Id
@@ -25,30 +25,36 @@ public class Category {
     @Column(name="NAME", nullable=false)
     private String categoryName;
     
-    @Column(name="DESCRIPTION", nullable=false)
+    @Column(name="DESCRIPTION")
     private String categoryDesc;    
     
-    @Columns(columns = {@Column(name="DATE", nullable=false),
-                        @Column(name="TIMEZONE", nullable=false)})
+    @Columns(columns = {@Column(name="CREATED_DATE", nullable=false),
+                        @Column(name="CREATED_TIMEZONE", nullable=false)})
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTimeWithZone")
-    private DateTime categoryDate;
+    private DateTime categoryCreatedDate;
     
     @Column(name="CREATOR", nullable=false)
     private String categoryCreator;
     
     @Column(name="PARENT")
     private String categoryParent;
+    
+    @Columns(columns = {@Column(name="MODIFIED_DATE", nullable=false),
+    					@Column(name="MODIFIED_TIMEZONE", nullable=false)})
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTimeWithZone")
+    private DateTime categoryModifiedDate;
 
     private Category() {
-        
+    	
     }
     
-    public Category(String categoryName, String categoryDesc, DateTime categoryDate, String categoryCreator, String categoryParent) {
+    public Category(String categoryName, String categoryDesc, DateTime categoryDate, String categoryCreator, String categoryParent, DateTime categoryModifiedDate) {
         this.categoryName = categoryName;
         this.categoryDesc = categoryDesc;
-        this.categoryDate = categoryDate;
+        this.categoryCreatedDate = categoryDate;
         this.categoryCreator = categoryCreator;
         this.categoryParent = categoryParent;
+        this.categoryModifiedDate = categoryModifiedDate;
     }
 
     public Long getId() {
@@ -67,20 +73,20 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    public DateTime getCategoryDate() {
-        return categoryDate;
-    }
-
-    public void setCategoryDate(DateTime categoryDate) {
-        this.categoryDate = categoryDate;
-    }
-
     public String getCategoryDesc() {
         return categoryDesc;
     }
 
     public void setCategoryDesc(String categoryDesc) {
         this.categoryDesc = categoryDesc;
+    }
+
+    public DateTime getCategoryCreateDate() {
+        return categoryCreatedDate;
+    }
+
+    public void setCategoryCreateDate(DateTime categoryCreatedDate) {
+        this.categoryCreatedDate = categoryCreatedDate;
     }
 
     public String getCategoryCreator() {
@@ -95,8 +101,15 @@ public class Category {
         return categoryParent;
     }
 
-    public void setCategoryModerator(String categoryParent) {
+    public void setCategoryParent(String categoryParent) {
         this.categoryParent = categoryParent;
     }
-
+    
+    public DateTime getCategoryModifiedDate() {
+    	return categoryModifiedDate;
+    }
+    
+    public void setCategoryModifiedDate(DateTime categoryModifiedDate) {
+    	this.categoryModifiedDate = categoryModifiedDate;
+    }
 }

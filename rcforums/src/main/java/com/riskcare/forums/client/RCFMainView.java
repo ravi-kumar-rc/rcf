@@ -25,7 +25,7 @@ public class RCFMainView {
 //        Label lblUser = new Label(); //.getAuthenticationService().getUser().toString());
 
         TabSheet tabs = new TabSheet();
-        tabs.setSizeFull();
+        tabs.setHeight("99%");
         tabs.addStyleName(Runo.TABSHEET_SMALL);
         tabs.addStyleName(Reindeer.TABSHEET_BORDERLESS);
         tabs.addTab(rcfAdmin.build(), "Administration");

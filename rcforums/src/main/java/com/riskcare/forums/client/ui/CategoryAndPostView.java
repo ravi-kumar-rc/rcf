@@ -9,21 +9,23 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 
-public class CategoryView implements Button.ClickListener, ItemClickListener, ItemSetChangeListener {
+public class CategoryAndPostView implements Button.ClickListener, ItemClickListener, ItemSetChangeListener {
 
     private static final long serialVersionUID = 1L;
 
-    private HorizontalLayout layout = new HorizontalLayout();
+    //Top layout
+    GridLayout topLayout = new GridLayout(3,2);
     
-    private Accordion accordionCRUD = new Accordion();
-    
+    //Components for the Category CRUD accordion
+    //--------------------START----------------------------
+    private Accordion categoryAccordionCRUD = new Accordion();
     private GridLayout createGridLayout = new GridLayout(2,4);
     private final Label lblParent = new Label("Parent category selected: ");
     private final TextField txtParent = new TextField();
@@ -62,33 +64,56 @@ public class CategoryView implements Button.ClickListener, ItemClickListener, It
     private final Label lblDelModDate = new Label("Last Modified date: ");
     private final TextField txtDelModDate = new TextField();
     private final Button btnDelete = new Button("Delete");
+    //--------------------END----------------------------
     
-    
+    //Layout for the category tree
     private final VerticalLayout treeLayout = new VerticalLayout();
+
+    //Category tree component
     private CategoryTree categoryTree;
+    
+    //Post view components
+    private PostView postView;
+    private Accordion postCRUDAccordion;
+    private Table postViewGrid;
+    
+    //Local category tree
     private Tree tree; 
+    
+    //Category object for the selected node in the tree
     private CategoryVO selectedCategory = null;
     
     
-    public CategoryView() {
+    public CategoryAndPostView() {
     }
     
-    public HorizontalLayout initialize() {
+    public GridLayout initialize() {
     	
     	buildCategoryTree();
-    	buildCategoryPanel();
-    	layout.setMargin(true);
-    	layout.setWidth("60%");
-    	layout.setHeight("50%");
-    	layout.addComponent(accordionCRUD);
-    	layout.addComponent(treeLayout);
+    	buildCategoryCRUDAccordion();
     	
-    	return layout;
+    	postCRUDAccordion = postView.buildPostCRUDAccordion();
+    	postViewGrid = postView.buildPostViewGrid();
+    	
+    	topLayout.setHeight("100%");
+    	topLayout.setWidth("100%");
+    	topLayout.setMargin(true);
+    	
+    	//first row of the grid layout
+    	topLayout.addComponent(categoryAccordionCRUD); 
+    	topLayout.addComponent(treeLayout); 
+    	topLayout.addComponent(postCRUDAccordion);	//builds the CRUD accordion for Posts management
+    	
+    	//second row of the grid layout
+    	topLayout.addComponent(postViewGrid, 0, 1, 2, 1);		//builds the Grid for the Posts view which spans over 3 columns of the row
+    	
+    	return topLayout;
     }
     
     private void buildCategoryTree() {
     	tree = categoryTree.initialize();
     	treeLayout.setMargin(true);
+    	treeLayout.setHeight("60%");
     	treeLayout.addComponent(tree);
     	tree.addItemClickListener(this);
     	btnCreate.addClickListener(this);
@@ -96,8 +121,9 @@ public class CategoryView implements Button.ClickListener, ItemClickListener, It
     	btnDelete.addClickListener(this);
     }
 
-    private void buildCategoryPanel() {
+    private void buildCategoryCRUDAccordion() {
     	
+    	//Setting editable properties of various fields
     	txtParent.setEnabled(false);
     	txtUpdCreDate.setEnabled(false);
     	txtUpdCreator.setEnabled(false);
@@ -156,10 +182,11 @@ public class CategoryView implements Button.ClickListener, ItemClickListener, It
     	deleteGridLayout.setSizeFull();
     	deleteGridLayout.setMargin(true);
     	
-    	accordionCRUD.setSizeFull();
-    	accordionCRUD.addTab(createGridLayout, "Create category");
-    	accordionCRUD.addTab(updateGridLayout, "Update category");
-    	accordionCRUD.addTab(deleteGridLayout, "Delete category");
+    	categoryAccordionCRUD.setSizeFull();
+    	categoryAccordionCRUD.setHeight("60%");
+    	categoryAccordionCRUD.addTab(createGridLayout, "Create category");
+    	categoryAccordionCRUD.addTab(updateGridLayout, "Update category");
+    	categoryAccordionCRUD.addTab(deleteGridLayout, "Delete category");
     	
     }
     
@@ -168,6 +195,7 @@ public class CategoryView implements Button.ClickListener, ItemClickListener, It
 		
 		selectedCategory = (CategoryVO) event.getItemId();
 		populateCategoryCRUDFields();
+		refreshPostView();
 	}
 
 	public void populateCategoryCRUDFields() {
@@ -220,6 +248,8 @@ public class CategoryView implements Button.ClickListener, ItemClickListener, It
     	if(txtUpdName.getValue().trim().equals(selectedCategory.getCategoryName()) && 
     			txtUpdDesc.getValue().trim().equals(selectedCategory.getCategoryDesc())) {
     		Notification.show("No change", "No changes had been made to the selected category",Notification.Type.WARNING_MESSAGE);
+    	} else if(txtUpdName.getValue().trim().equals("")){
+    		Notification.show("No change", "Category name cannot be empty",Notification.Type.WARNING_MESSAGE);
     	} else {
     		String catUpdName = txtUpdName.getValue().trim();
     		String catUpdDesc = txtUpdDesc.getValue().trim();
@@ -244,6 +274,11 @@ public class CategoryView implements Button.ClickListener, ItemClickListener, It
     
     public void repaintTree() {
     	tree=categoryTree.initialize();
+    }
+    
+    public void refreshPostView() {
+    	postView.initialize(selectedCategory);
+    	postView.refreshPostViewGrid();
     }
     
     public void resetFields() {
@@ -283,4 +318,12 @@ public class CategoryView implements Button.ClickListener, ItemClickListener, It
 	public void containerItemSetChange(ItemSetChangeEvent event) {
 	}
 
+	public PostView getPostView() {
+		return postView;
+	}
+
+	public void setPostView(PostView postView) {
+		this.postView = postView;
+	}
+	
 }

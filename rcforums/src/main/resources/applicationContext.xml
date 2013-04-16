@@ -37,26 +37,36 @@
 	</bean>
 	
 	<bean id="rcfAdmin" class="com.riskcare.forums.client.ui.RCFAdmin">
-		<property name="categoryManagement" ref="categoryManagement" />
-		<property name="postManagement" ref="postManagement" />
+		<property name="categoryAndPostManagement" ref="categoryAndPostManagement" />
+		<property name="userManagement" ref="userManagement" />
 	</bean>
 	
-	<bean id="categoryManagement" class="com.riskcare.forums.client.ui.RCFCategoryManagement">
-		<property name="categoryView" ref="categoryView"/>
+	<bean id="categoryAndPostManagement" class="com.riskcare.forums.client.ui.RCFCategoryAndPostManagement">
+		<property name="categoryAndPostView" ref="categoryAndPostView"/>
 	</bean>
 	
-	<bean id="postManagement" class="com.riskcare.forums.client.ui.RCFPostManagement" />
-	
-	<bean id="categoryView" class="com.riskcare.forums.client.ui.CategoryView">
+	<bean id="categoryAndPostView" class="com.riskcare.forums.client.ui.CategoryAndPostView">
 		<property name="categoryTree" ref="categoryTree" />
+		<property name="postView" ref="postView"></property>
 	</bean>
 	
+	<bean id="userManagement" class="com.riskcare.forums.client.ui.RCFUserManagement" />
+
 	<bean id="categoryTree" class="com.riskcare.forums.client.ui.CategoryTree">
 		<property name="categoryContainerController" ref="categoryContainerController" />
 	</bean>
 	
+	<bean id="postView" class="com.riskcare.forums.client.ui.PostView">
+		<property name="postContainerController" ref="postContainerController" />
+	</bean>
+	
 	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController" >
 		<property name="categoryService" ref="categoryService" />
+		<property name="clientFactory" ref="clientFactory" />
+	</bean>
+	
+	<bean id="postContainerController" class="com.riskcare.forums.server.container.PostContainerController">
+		<property name="postService" ref="postService" />
 		<property name="clientFactory" ref="clientFactory" />
 	</bean>
 	
@@ -86,6 +96,11 @@
 	<bean id="categoryService" class="com.riskcare.forums.server.service.CategoryService">
 		<property name="categoryDAO" ref="categoryDAO" />
 	</bean>
+	
+	<bean id="postService" class="com.riskcare.forums.server.service.PostService">
+		<property name="categoryDAO" ref="categoryDAO" />
+		<property name="postDAO" ref="postDAO" />
+	</bean>
 
 	<bean id="authenticationService" class="com.riskcare.forums.server.service.AuthenticationServiceImpl" />
 	<bean id="categoryMapper" class="com.riskcare.forums.server.dao.category.CategoryMapper" />
@@ -113,4 +128,7 @@
     	<property name="sessionFactory" ref="sessionFactory"/>
     </bean>
         
+	<bean id="postDAO" class="com.riskcare.forums.server.dao.post.PostDAO">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>        
 </beans>

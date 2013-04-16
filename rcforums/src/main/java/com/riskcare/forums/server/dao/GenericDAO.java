@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;

@@ -1,10 +1,15 @@
 package com.riskcare.forums.server.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -44,6 +49,11 @@ public class Category {
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTimeWithZone")
     private DateTime categoryModifiedDate;
 
+    @OneToMany(targetEntity=Post.class, mappedBy="postCategory",
+    		cascade=CascadeType.ALL)
+    private List<Post> posts;
+    
+	@SuppressWarnings("unused")
     private Category() {
     	
     }
@@ -112,4 +122,17 @@ public class Category {
     public void setCategoryModifiedDate(DateTime categoryModifiedDate) {
     	this.categoryModifiedDate = categoryModifiedDate;
     }
+    
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(ArrayList<Post> posts) {
+		this.posts = posts;
+	}
+
+	@Override
+	public String toString() {
+		return categoryName;
+	}
 }

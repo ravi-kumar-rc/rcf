@@ -11,7 +11,7 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.connection.release_mode">auto</property>
         <property name="hibernate.connection.autocommit">false</property>
-        <!-- <property name="hibernate.hbm2ddl.auto">create-drop</property> -->
+        <!--<property name="hibernate.hbm2ddl.auto">create-drop</property>-->
         <property name="hibernate.id.new_generator_mappings">true</property>
         <!--  <property name="hibernate.jdbc.batch_size">20</property>
          <property name="hibernate.cache.use_second_level_cache">true</property>

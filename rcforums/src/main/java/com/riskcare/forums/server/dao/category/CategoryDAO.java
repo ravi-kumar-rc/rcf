@@ -35,10 +35,10 @@ public class CategoryDAO extends GenericDAO<Category> {
         return categories;
     }
     
-    public Object findRoot() throws Exception {
-        Session session = getSession();
+    public Object findRoot() {
         Object root = null;
         try {
+            Session session = getSession();
             Criteria criteria = session.createCriteria(Category.class);
             criteria.add(Restrictions.isNull("categoryParent"));
             root = criteria.uniqueResult(); 
@@ -49,6 +49,25 @@ public class CategoryDAO extends GenericDAO<Category> {
         }
         return root;
     }    
+    
+    public boolean isRoot(Category category) {
+        Object root = null;
+        try {
+            Session session = getSession();
+            Criteria criteria = session.createCriteria(Category.class);
+            criteria.add(Restrictions.isNull("categoryParent"));
+            criteria.add(Restrictions.eq("categoryName", category.getCategoryName()));
+            root = criteria.uniqueResult();
+            if(root != null) {
+            	return true;
+            }
+        } catch(Exception e) {
+            LOG.error(e.getMessage());
+        } finally {
+        	closeSession();
+        }
+    	return false;
+    }
     
     /**
      * Updates a Category
@@ -94,12 +113,13 @@ public class CategoryDAO extends GenericDAO<Category> {
      * @param session
      * 
      */
-    public void deleteCategory(Category category) throws Exception {
+    @SuppressWarnings("unchecked")
+	public void deleteCategory(Category category) {
     	String categoryName = category.getCategoryName();
-        Session session = getSession();
         List<Category> items = null;
         Category categoryToBeDeleted = null;
         try {
+            Session session = getSession();
             Criteria criteria = session.createCriteria(Category.class);
             criteria.add(Restrictions.eq("categoryName",categoryName));
             categoryToBeDeleted = (Category) criteria.uniqueResult();
@@ -115,6 +135,19 @@ public class CategoryDAO extends GenericDAO<Category> {
         } catch(Exception e) {
             LOG.error(e.getMessage());
         }
+    }
+    
+    public Category findCategory(Category category) {
+    	Category foundCategory = null;
+        try {
+            Session session = getSession();
+            Criteria criteria = session.createCriteria(Category.class);
+            criteria.add(Restrictions.eq("categoryName",category.getCategoryName()));
+            foundCategory = (Category) criteria.uniqueResult();
+        } catch(Exception e) {
+            LOG.error(e.getMessage());
+        }
+        return foundCategory;
     }
     
 }

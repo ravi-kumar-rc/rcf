@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.Runo;
 
@@ -31,14 +32,13 @@ import com.vaadin.ui.themes.Runo;
 @SuppressWarnings("serial")
 @Theme(Runo.THEME_NAME)
 @Component("rcf")
-@Scope("request")
+@Scope("session")
 public class RCF extends UI
 {
 	private RCFMainView mainView;
 	
 	@Override
 	protected void init(VaadinRequest request) {
-		setCurrent(this);
 		setContent(mainView.build());
 	}
 
@@ -51,4 +51,8 @@ public class RCF extends UI
 		this.mainView = mainView;
 	}
 	
+	@Override
+	public void close() {
+		
+	}
 }

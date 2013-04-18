@@ -28,39 +28,39 @@
 	
 	<context:annotation-config />
 	
-	<bean id="rcf" class="com.riskcare.forums.client.RCF">
+	<bean id="rcf" class="com.riskcare.forums.client.RCF" scope="session">
 		<property name="mainView" ref="mainView" />
 	</bean>
 	
-	<bean id="mainView" class="com.riskcare.forums.client.RCFMainView">
+	<bean id="mainView" class="com.riskcare.forums.client.RCFMainView" scope="session">
 		<property name="rcfAdmin" ref="rcfAdmin" />
 	</bean>
 	
-	<bean id="rcfAdmin" class="com.riskcare.forums.client.ui.RCFAdmin">
+	<bean id="rcfAdmin" class="com.riskcare.forums.client.ui.RCFAdmin" scope="session">
 		<property name="categoryAndPostManagement" ref="categoryAndPostManagement" />
 		<property name="userManagement" ref="userManagement" />
 	</bean>
 	
-	<bean id="categoryAndPostManagement" class="com.riskcare.forums.client.ui.RCFCategoryAndPostManagement">
+	<bean id="categoryAndPostManagement" class="com.riskcare.forums.client.ui.RCFCategoryAndPostManagement"  scope="session">
 		<property name="categoryAndPostView" ref="categoryAndPostView"/>
 	</bean>
 	
-	<bean id="categoryAndPostView" class="com.riskcare.forums.client.ui.CategoryAndPostView">
+	<bean id="categoryAndPostView" class="com.riskcare.forums.client.ui.CategoryAndPostView" scope="session">
 		<property name="categoryTree" ref="categoryTree" />
 		<property name="postView" ref="postView"></property>
 	</bean>
 	
-	<bean id="userManagement" class="com.riskcare.forums.client.ui.RCFUserManagement" />
+	<bean id="userManagement" class="com.riskcare.forums.client.ui.RCFUserManagement"  scope="session"/>
 
-	<bean id="categoryTree" class="com.riskcare.forums.client.ui.CategoryTree">
+	<bean id="categoryTree" class="com.riskcare.forums.client.ui.CategoryTree" scope="session">
 		<property name="categoryContainerController" ref="categoryContainerController" />
 	</bean>
 	
-	<bean id="postView" class="com.riskcare.forums.client.ui.PostView">
+	<bean id="postView" class="com.riskcare.forums.client.ui.PostView" scope="session">
 		<property name="postContainerController" ref="postContainerController" />
 	</bean>
 	
-	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController" >
+	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController">
 		<property name="categoryService" ref="categoryService" />
 		<property name="clientFactory" ref="clientFactory" />
 	</bean>

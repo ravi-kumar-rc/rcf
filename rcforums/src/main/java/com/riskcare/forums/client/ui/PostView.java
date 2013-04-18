@@ -60,7 +60,6 @@ public class PostView implements Button.ClickListener {
     	postLayout.setSpacing(true);
     	postLayout.setHeight("60%");
     	postLayout.setWidth("100%");
-    	postLayout.setMargin(true);
     	
     	postLayout.addComponent(lblPostTitle); postLayout.addComponent(txtPostTitle);
     	postLayout.addComponent(lblPostDesc); postLayout.addComponent(txtPostDesc);

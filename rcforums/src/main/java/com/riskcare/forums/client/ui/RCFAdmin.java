@@ -18,7 +18,8 @@ public class RCFAdmin {
     public VerticalLayout build() {
     	VerticalLayout layout = new VerticalLayout();
 		layout.setHeight("99%");
-    	
+    	layout.setMargin(true);
+		
 		tabs.setHeight("99%");
         tabs.addStyleName(Runo.TABSHEET_SMALL);
         tabs.addTab(categoryAndPostManagement.build(), "Category & Post Management");

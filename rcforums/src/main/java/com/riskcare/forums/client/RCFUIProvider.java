@@ -9,7 +9,7 @@ import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
-@Scope("request")
+@Scope("session")
 public class RCFUIProvider extends UIProvider {
 
 	private static final long serialVersionUID = 1L;
@@ -19,7 +19,7 @@ public class RCFUIProvider extends UIProvider {
 	public RCFUIProvider() {
 	}
 	
-	
+	@Scope("session")
 	@Override
 	public UI createInstance(UICreateEvent event) {
 		return (UI) SpringApplicationContext.getApplicationContext().getBean(getUIBeanName(event.getRequest()));
@@ -56,48 +56,4 @@ public class RCFUIProvider extends UIProvider {
 		
 		return vaadinBeanName;
 	}
-	/*
-	@Override
-	public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
-		VaadinRequest request = event.getRequest();
-		Object uiBeanNameObj = request.getService().getDeploymentConfiguration().getApplicationOrSystemProperty("UIBean", null);
-		if(uiBeanNameObj instanceof String) {
-			String uiBeanName = uiBeanNameObj.toString();
-			final ApplicationContext applicationContext = ApplicationContextLocator.getApplicationContext();
-			final Class<? extends UI> bean = (Class<? extends UI>) applicationContext.getType(uiBeanName);
-			if(bean != null) {
-				return bean;
-			} else {
-				ClassLoader loader = request.getService().getClassLoader();
-				try {
-					Class<? extends UI> uiClass = Class.forName(uiBeanName, true, loader).asSubclass(UI.class);
-					return uiClass;
-				} catch(ClassNotFoundException e) {
-					throw new RuntimeException("Could not find UI class");
-				}
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public UI createInstance(UICreateEvent event) {
-        VaadinRequest request = event.getRequest();
-        Object uiBeanNameObj = request
-                .getService()
-                .getDeploymentConfiguration()
-                .getApplicationOrSystemProperty("UIBean",
-                        null);
-
-        //Stored in VaadinSession to use it in
-        // the ApplicationScope later to initialize vaadin application scope beans
-        final Integer uiId = event.getUiId();
-        VaadinSession.getCurrent().setAttribute("sessionScope.UiId", uiId);
-
-        if (uiBeanNameObj instanceof String) {
-            String uiBeanName = uiBeanNameObj.toString();
-            return (UI) ApplicationContextLocator.getBean(uiBeanName);
-        }
-        return super.createInstance(event);
-	}*/
 }

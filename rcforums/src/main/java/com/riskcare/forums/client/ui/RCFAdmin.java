@@ -1,9 +1,12 @@
 package com.riskcare.forums.client.ui;
 
+import org.springframework.context.annotation.Scope;
+
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Runo;
 
+@Scope("session")
 public class RCFAdmin {
 
     private final TabSheet tabs = new TabSheet();

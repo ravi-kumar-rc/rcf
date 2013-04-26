@@ -1,24 +1,33 @@
 package com.riskcare.forums.client.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+
 import com.riskcare.forums.server.vo.CategoryVO;
-import com.vaadin.data.Container.ItemSetChangeEvent;
-import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.Runo;
 
-public class CategoryAndPostView implements Button.ClickListener, ItemClickListener, ItemSetChangeListener {
+@Scope("session")
+public class CategoryAndPostView implements Button.ClickListener, ItemClickListener {
 
     private static final long serialVersionUID = 1L;
+    
+    private static final Logger LOG = LoggerFactory.getLogger(CategoryAndPostView.class);
 
     //Top layout
     GridLayout topLayout = new GridLayout(3,2);
@@ -67,7 +76,10 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
     //--------------------END----------------------------
     
     //Layout for the category tree
+    private final VerticalLayout topTreeLayout = new VerticalLayout();
+    private final Panel treePanel = new Panel();
     private final VerticalLayout treeLayout = new VerticalLayout();
+    private final Label lblCategoryCaption = new Label("<h3><b>Categories available</b></h3>", ContentMode.HTML);
 
     //Category tree component
     private CategoryTree categoryTree;
@@ -89,33 +101,50 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
     
     public GridLayout initialize() {
     	
+    	LOG.debug("Initializing the category and post view");
     	buildCategoryTree();
     	buildCategoryCRUDAccordion();
     	
     	postCRUDAccordion = postView.buildPostCRUDAccordion();
+    	postCRUDAccordion.setHeight("100%");
     	postViewGrid = postView.buildPostViewGrid();
     	
+    	topLayout.setImmediate(true);
     	topLayout.setHeight("100%");
     	topLayout.setWidth("100%");
-    	topLayout.setMargin(true);
+    	topLayout.setSpacing(true);
     	
     	//first row of the grid layout
     	topLayout.addComponent(categoryAccordionCRUD); 
-    	topLayout.addComponent(treeLayout); 
+    	topLayout.addComponent(topTreeLayout); 
     	topLayout.addComponent(postCRUDAccordion);	//builds the CRUD accordion for Posts management
     	
     	//second row of the grid layout
     	topLayout.addComponent(postViewGrid, 0, 1, 2, 1);		//builds the Grid for the Posts view which spans over 3 columns of the row
+    	topLayout.setComponentAlignment(postViewGrid, Alignment.TOP_LEFT);
     	
     	return topLayout;
     }
     
     private void buildCategoryTree() {
     	tree = categoryTree.initialize();
-    	treeLayout.setMargin(true);
-    	treeLayout.setHeight("60%");
-    	treeLayout.addComponent(tree);
     	tree.addItemClickListener(this);
+    	tree.setSizeUndefined();
+    	
+    	treePanel.addStyleName(Runo.PANEL_LIGHT);
+    	treePanel.setHeight("100%");
+    	treePanel.setContent(treeLayout);
+
+    	treeLayout.setImmediate(true);
+    	treeLayout.setMargin(true);
+    	treeLayout.setSizeUndefined();
+    	treeLayout.addStyleName(Reindeer.LAYOUT_WHITE);
+    	treeLayout.addComponent(tree);
+
+    	topTreeLayout.setHeight("100%");
+    	//topTreeLayout.addComponent(lblCategoryCaption);
+    	topTreeLayout.addComponent(treePanel);
+    	
     	btnCreate.addClickListener(this);
     	btnUpdate.addClickListener(this);
     	btnDelete.addClickListener(this);
@@ -183,19 +212,26 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
     	deleteGridLayout.setMargin(true);
     	
     	categoryAccordionCRUD.setSizeFull();
-    	categoryAccordionCRUD.setHeight("60%");
+    	categoryAccordionCRUD.setHeight("100%");
     	categoryAccordionCRUD.addTab(createGridLayout, "Create category");
     	categoryAccordionCRUD.addTab(updateGridLayout, "Update category");
     	categoryAccordionCRUD.addTab(deleteGridLayout, "Delete category");
     	
     }
     
+    /*
+    @Subscribe
+    public void refreshTreeView(CategoryCRUDEvent event) {
+    	LOG.debug("Refreshing the category view...");
+    	tree.setContainerDataSource(categoryTree.initialize().getContainerDataSource());
+    }*/
+    
 	@Override
 	public void itemClick(ItemClickEvent event) {
 		
 		selectedCategory = (CategoryVO) event.getItemId();
 		populateCategoryCRUDFields();
-		refreshPostView();
+		// refreshPostView();
 	}
 
 	public void populateCategoryCRUDFields() {
@@ -238,7 +274,6 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
 			String catParent = txtParent.getValue();
 			categoryTree.addItem(catName, catDesc, catParent);
 			resetFields();   			
-			repaintTree();
 			Notification.show("Info", "The category is now created",Notification.Type.HUMANIZED_MESSAGE);
 			btnCreate.setEnabled(true);
 		}
@@ -255,7 +290,6 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
     		String catUpdDesc = txtUpdDesc.getValue().trim();
     		categoryTree.updateItem(catUpdName, catUpdDesc, selectedCategory);
     		resetFields();
-    		repaintTree();
     		Notification.show("Info", "The category is now updated",Notification.Type.HUMANIZED_MESSAGE);
     	}
     }
@@ -267,15 +301,11 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
     		Notification.show("Error", "Root category cannot be deleted", Notification.Type.ERROR_MESSAGE);
     	} else {
     		categoryTree.deleteItem(selectedCategory);
-    		repaintTree();
+    		resetFields();
     		Notification.show("Info", "The category is now deleted",Notification.Type.HUMANIZED_MESSAGE);
     	}
     }
-    
-    public void repaintTree() {
-    	tree=categoryTree.initialize();
-    }
-    
+
     public void refreshPostView() {
     	postView.initialize(selectedCategory);
     	postView.refreshPostViewGrid();
@@ -312,10 +342,6 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
 
 	public void setCategoryTree(CategoryTree categoryTree) {
 		this.categoryTree = categoryTree;
-	}
-
-	@Override
-	public void containerItemSetChange(ItemSetChangeEvent event) {
 	}
 
 	public PostView getPostView() {

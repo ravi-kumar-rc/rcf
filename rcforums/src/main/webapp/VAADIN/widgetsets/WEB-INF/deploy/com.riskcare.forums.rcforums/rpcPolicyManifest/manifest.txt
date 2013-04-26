@@ -1,0 +1,2 @@
+# Module com.riskcare.forums.rcforums
+# RPC service class, partial path of RPC policy file

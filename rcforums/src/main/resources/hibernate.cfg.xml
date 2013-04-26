@@ -8,7 +8,7 @@
         <property name="hibernate.connection.pool_size">10</property>
         <property name="hibernate.default_schema">rcf</property>
         <property name="hibernate.dialect">com.riskcare.forums.server.dao.DatabaseServerDialect</property>
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
         <property name="hibernate.connection.release_mode">auto</property>
         <property name="hibernate.connection.autocommit">false</property>
         <!--<property name="hibernate.hbm2ddl.auto">create-drop</property>-->
@@ -21,6 +21,6 @@
 
         <property name="hibernate.order_inserts">true</property>
         <property name="hibernate.order_updates">true</property>
-        <property name="hibernate.generate_statistics">true</property>
+        <!-- <property name="hibernate.generate_statistics">true</property> -->
     </session-factory>
 </hibernate-configuration>

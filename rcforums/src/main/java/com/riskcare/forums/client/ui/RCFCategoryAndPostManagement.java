@@ -13,6 +13,7 @@ public class RCFCategoryAndPostManagement {
     	VerticalLayout layout = new VerticalLayout();
 		layout.setMargin(true);
 		layout.setHeight("99%");
+		layout.setImmediate(true);
     	
         layout.addComponent(categoryAndPostView.initialize());
         

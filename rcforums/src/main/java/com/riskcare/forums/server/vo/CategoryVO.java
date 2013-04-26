@@ -14,8 +14,9 @@ public class CategoryVO implements Serializable {
     private String categoryCreator;
     private String categoryParent; 
     private DateTime categoryModifiedDate;
+    private DateTime timeToDie;
     
-    public CategoryVO() {
+	public CategoryVO() {
     	
     }
     
@@ -80,5 +81,13 @@ public class CategoryVO implements Serializable {
 	@Override
 	public String toString() {
 		return categoryName;
+	}
+	
+    public DateTime getTimeToDie() {
+		return timeToDie;
+	}
+
+	public void setTimeToDie(DateTime timeToDie) {
+		this.timeToDie = timeToDie;
 	}
 }

@@ -15,6 +15,10 @@
 		<param-name>productionMode</param-name>
 		<param-value>false</param-value>
 	</context-param>
+	<context-param>
+		<param-name>heartbeatInterval</param-name>
+		<param-value>300</param-value>
+	</context-param>
 	<servlet>
 		<servlet-name>Vaadin Application Servlet</servlet-name>
 		<servlet-class>com.riskcare.forums.client.RCFServlet</servlet-class>
@@ -32,7 +36,10 @@
 			<param-name>UIBean</param-name>
 			<param-value>rcf</param-value>
 		</init-param>
-		 
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.riskcare.forums.rcforums</param-value>
+		</init-param> 
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Vaadin Application Servlet</servlet-name>

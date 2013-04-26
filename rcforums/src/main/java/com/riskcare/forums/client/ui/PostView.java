@@ -3,6 +3,7 @@ package com.riskcare.forums.client.ui;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.springframework.context.annotation.Scope;
 
 import com.riskcare.forums.server.container.PostContainerController;
 import com.riskcare.forums.server.vo.CategoryVO;
@@ -19,6 +20,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.Runo;
 
+@Scope("session")
 public class PostView implements Button.ClickListener {
 
 	private static final long serialVersionUID = 1L;
@@ -58,8 +60,9 @@ public class PostView implements Button.ClickListener {
 
     public Accordion buildPostCRUDAccordion() {
     	postLayout.setSpacing(true);
-    	postLayout.setHeight("60%");
+    	postLayout.setHeight("100%");
     	postLayout.setWidth("100%");
+    	postLayout.setMargin(true);
     	
     	postLayout.addComponent(lblPostTitle); postLayout.addComponent(txtPostTitle);
     	postLayout.addComponent(lblPostDesc); postLayout.addComponent(txtPostDesc);

@@ -25,8 +25,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<slf4j-api.version>1.7.2</slf4j-api.version>
 	<usertype.core.version>3.1.0.CR1</usertype.core.version>
+	<vaadin.blackboard.addon.version>2.2.0</vaadin.blackboard.addon.version>
+	<vaadin.confirm.dialog>2.0.4</vaadin.confirm.dialog>
 	<vaadin.refresher.addon>1.2.1.7</vaadin.refresher.addon>
     <vaadin.version>7.0.3</vaadin.version>
+    <vaadin.widgets.dir>src/main/webapp/VAADIN/widgetsets</vaadin.widgets.dir>
   </properties>
 
   <build>
@@ -63,7 +66,105 @@
           </webAppConfig>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>${gwt.plugin.version}</version>
+        <configuration>
+          <webappDirectory>${vaadin.widgets.dir}</webappDirectory>
+          <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+          <runTarget>project-name</runTarget>
+          <!-- <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp> -->
+          <noServer>true</noServer>
+          <port>8080</port>
+          <compileReport>false</compileReport>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resources</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwt.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-maven-plugin</artifactId>
+        <version>${vaadin.version}</version>
+        <executions>
+          <execution>
+            <configuration>
+            </configuration>
+            <goals>
+              <goal>update-widgetset</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>      
     </plugins>
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>com.vaadin</groupId>
+    								<artifactId>
+    									vaadin-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[1.0.2,)
+    								</versionRange>
+    								<goals>
+    									<goal>update-widgetset</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.codehaus.mojo</groupId>
+    								<artifactId>
+    									gwt-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[2.4.0,)
+    								</versionRange>
+    								<goals>
+    									<goal>resources</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
   </build>
 
   <dependencies>
@@ -111,6 +212,12 @@
 	   <artifactId>refresher</artifactId>
 	   <version>${vaadin.refresher.addon}</version>
 	</dependency>
+	<dependency>
+	   <groupId>org.vaadin.addon</groupId>
+	   <artifactId>confirmdialog</artifactId>
+	   <version>${vaadin.confirm.dialog}</version>
+	</dependency>
+
 
 	<!-- *********************** GWT Dependencies ******************** -->
     <dependency>

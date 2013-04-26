@@ -30,6 +30,10 @@
 	
 	<bean id="rcf" class="com.riskcare.forums.client.RCF" scope="session">
 		<property name="mainView" ref="mainView" />
+		<!-- <property name="categoryAndPostView" ref="categoryAndPostView" />  -->
+		<property name="categoryTree" ref="categoryTree" /> 
+		<property name="postView" ref="postView"></property>
+		<property name="clientFactory" ref="clientFactory" />
 	</bean>
 	
 	<bean id="mainView" class="com.riskcare.forums.client.RCFMainView" scope="session">
@@ -53,6 +57,7 @@
 	<bean id="userManagement" class="com.riskcare.forums.client.ui.RCFUserManagement"  scope="session"/>
 
 	<bean id="categoryTree" class="com.riskcare.forums.client.ui.CategoryTree" scope="session">
+		<property name="clientFactory" ref="clientFactory" />
 		<property name="categoryContainerController" ref="categoryContainerController" />
 	</bean>
 	
@@ -60,18 +65,22 @@
 		<property name="postContainerController" ref="postContainerController" />
 	</bean>
 	
-	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController">
+	<bean id="eventBus" class="com.google.common.eventbus.EventBus" scope="session"/>
+	
+	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController" scope="session">
 		<property name="categoryService" ref="categoryService" />
 		<property name="clientFactory" ref="clientFactory" />
+		<property name="statusService" ref="statusService"></property>
 	</bean>
 	
-	<bean id="postContainerController" class="com.riskcare.forums.server.container.PostContainerController">
+	<bean id="postContainerController" class="com.riskcare.forums.server.container.PostContainerController" scope="session">
 		<property name="postService" ref="postService" />
 		<property name="clientFactory" ref="clientFactory" />
 	</bean>
-	
+
 	<bean id="clientFactory" class="com.riskcare.forums.client.RCFClientFactoryImpl">
 		<property name="authenticationService" ref="authenticationService" />
+		<property name="statusService" ref="statusService" />
 	</bean>
 	
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -103,6 +112,7 @@
 	</bean>
 
 	<bean id="authenticationService" class="com.riskcare.forums.server.service.AuthenticationServiceImpl" />
+	<bean id="statusService" class="com.riskcare.forums.server.service.StatusServiceImpl" init-method="startClearUpdates" />
 	<bean id="categoryMapper" class="com.riskcare.forums.server.dao.category.CategoryMapper" />
 
     <bean id="cpDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">

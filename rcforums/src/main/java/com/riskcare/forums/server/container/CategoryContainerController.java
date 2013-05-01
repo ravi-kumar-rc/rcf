@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 
 import com.riskcare.forums.client.RCFClientFactory;
-import com.riskcare.forums.server.event.UIEvent;
 import com.riskcare.forums.server.event.UIEventMapper;
 import com.riskcare.forums.server.service.CategoryService;
 import com.riskcare.forums.server.service.StatusService;
@@ -33,7 +32,7 @@ public class CategoryContainerController {
 	}
 	
 	
-	public void addCategory(String name, String desc, String parent) {
+	public synchronized void addCategory(String name, String desc, String parent) {
 		LOG.debug("Adding a new category with name: " + name);
 		CategoryVO newCategory = new CategoryVO(name, desc, DateTime.now(), clientFactory.getAuthenticationService().getUser().getUsername(), 
 				parent, DateTime.now());
@@ -43,7 +42,7 @@ public class CategoryContainerController {
 		LOG.debug("Added new category event: " + name);
 	}
 	
-	public void updateCategory(String name, String desc, CategoryVO actualCategory) {
+	public synchronized void updateCategory(String name, String desc, CategoryVO actualCategory) {
 		LOG.debug("Updating category with name: " + actualCategory.getCategoryName());
 		CategoryVO updatedCategory = new CategoryVO(name, desc, actualCategory.getCategoryCreateDate(), actualCategory.getCategoryCreator(), 
 				actualCategory.getCategoryParent(), DateTime.now());
@@ -53,7 +52,7 @@ public class CategoryContainerController {
 		LOG.debug("Added update category event: " + name);		
 	}
 	
-	public void deleteCategory(CategoryVO category) {
+	public synchronized void deleteCategory(CategoryVO category) {
 		LOG.debug("Deleting category " + category.getCategoryName());
 		categoryService.deleteCategory(category);
 		LOG.debug("Deleted category " + category.getCategoryName());
@@ -73,7 +72,7 @@ public class CategoryContainerController {
 		return root;
 	}
 	
-	public HierarchicalContainer getCategoryContainer() {
+	public synchronized HierarchicalContainer getCategoryContainer() {
 
 		categoryContainer = new HierarchicalContainer();
 		
@@ -106,7 +105,7 @@ public class CategoryContainerController {
 		return categoryContainer;
 	}
 
-	public boolean attachToParent(CategoryVO categoryItem) {
+	public synchronized boolean attachToParent(CategoryVO categoryItem) {
 		CategoryVO temp = null;
 		
 		for(CategoryVO category : categories) {
@@ -119,6 +118,33 @@ public class CategoryContainerController {
 			temp = null;
 		}
 		return false;
+	}
+
+	public synchronized List<CategoryVO> getChildCategories(CategoryVO parentCategory) {
+
+		List<CategoryVO> childCategories = new ArrayList<CategoryVO>();
+		List<CategoryVO> interChildCategories = categoryService.findChildCategories(parentCategory);
+		
+		childCategories.add(parentCategory);
+		
+		if(interChildCategories.size() > 0 && interChildCategories != null) {
+			childCategories.addAll(interChildCategories);
+			
+			List<CategoryVO> temp;
+			while(interChildCategories.size() > 0 && interChildCategories != null) {
+				temp = new ArrayList<CategoryVO>();
+				for(CategoryVO childCategory: interChildCategories) {
+					temp.addAll(categoryService.findChildCategories(childCategory));
+					if(temp != null || temp.size() > 0) {
+						childCategories.addAll(temp);
+					}
+				}
+				interChildCategories = temp;
+				temp = null;
+			}
+		}
+		return childCategories;
+		
 	}
 	
 	public CategoryService getCategoryService() {

@@ -8,6 +8,7 @@ public class CategoryVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
     
+	private long id;
     private String categoryName;
     private String categoryDesc;    
     private DateTime categoryCreateDate;
@@ -19,7 +20,7 @@ public class CategoryVO implements Serializable {
 	public CategoryVO() {
     	
     }
-    
+
     public CategoryVO(final String categoryName, final String categoryDesc, 
             final DateTime categoryDate, final String categoryCreator, final String categoryParent, final DateTime categoryModifiedDate) {
         this.categoryName = categoryName;
@@ -29,8 +30,27 @@ public class CategoryVO implements Serializable {
         this.categoryParent = categoryParent;
         this.categoryModifiedDate = categoryModifiedDate;
     }
+	
+    public CategoryVO(final long id, final String categoryName, final String categoryDesc, 
+            final DateTime categoryDate, final String categoryCreator, final String categoryParent, final DateTime categoryModifiedDate) {
+    	this.id = id;
+        this.categoryName = categoryName;
+        this.categoryDesc = categoryDesc;
+        this.categoryCreateDate = categoryDate;
+        this.categoryCreator = categoryCreator;
+        this.categoryParent = categoryParent;
+        this.categoryModifiedDate = categoryModifiedDate;
+    }
     
-    public final String getCategoryName() {
+    public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public final String getCategoryName() {
         return categoryName;
     }
 

@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.riskcare.forums.server.container.CategoryContainerController;
 import com.riskcare.forums.server.dao.category.CategoryDAO;
 import com.riskcare.forums.server.dao.category.CategoryMapper;
 import com.riskcare.forums.server.dao.post.PostDAO;
@@ -23,6 +24,8 @@ public class PostService {
 	
 	private Logger LOG = LoggerFactory.getLogger(PostService.class);
 	
+	private CategoryContainerController categoryContainerController;
+	private CategoryMapper categoryMapper;
 	private CategoryDAO categoryDAO;
 	private PostDAO postDAO;
 	
@@ -49,14 +52,19 @@ public class PostService {
 	}
 	
 	public List<PostVO> findAll(CategoryVO categoryVO) {
+		List<CategoryVO> childCategories = categoryContainerController.getChildCategories(categoryVO);
 		List<PostVO> posts = new ArrayList<PostVO>();
 		List<Post> records = null;
-		Category category = new CategoryMapper().voToEntity(categoryVO);
-		if(categoryDAO.isRoot(category)) {
-			records = postDAO.findAll();
-		} else {
-			records = postDAO.findAll(category);
+		if(childCategories.size() > 0 && childCategories != null) { 
+			for(CategoryVO childCategory: childCategories) {		
+				if(records == null) {
+					records = postDAO.findAll(categoryMapper.voToEntity(childCategory));
+				} else {
+					records.addAll(postDAO.findAll(categoryMapper.voToEntity(childCategory)));
+				}
+			}
 		}
+		
 		if(records == null) {
 			LOG.error("Error in retrieving posts from database");
 		} else {
@@ -92,5 +100,21 @@ public class PostService {
 	public void setPostDAO(PostDAO postDAO) {
 		this.postDAO = postDAO;
 	}
-	
+
+	public CategoryContainerController getCategoryContainerController() {
+		return categoryContainerController;
+	}
+
+	public void setCategoryContainerController(
+			CategoryContainerController categoryContainerController) {
+		this.categoryContainerController = categoryContainerController;
+	}
+
+	public CategoryMapper getCategoryMapper() {
+		return categoryMapper;
+	}
+
+	public void setCategoryMapper(CategoryMapper categoryMapper) {
+		this.categoryMapper = categoryMapper;
+	}
 }

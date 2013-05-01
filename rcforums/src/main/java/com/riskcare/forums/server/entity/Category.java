@@ -49,7 +49,7 @@ public class Category {
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTimeWithZone")
     private DateTime categoryModifiedDate;
 
-    @OneToMany(targetEntity=Post.class, mappedBy="postCategory",
+    @OneToMany(mappedBy="postCategory",
     		cascade=CascadeType.ALL)
     private List<Post> posts;
     
@@ -59,6 +59,16 @@ public class Category {
     }
     
     public Category(String categoryName, String categoryDesc, DateTime categoryDate, String categoryCreator, String categoryParent, DateTime categoryModifiedDate) {
+        this.categoryName = categoryName;
+        this.categoryDesc = categoryDesc;
+        this.categoryCreatedDate = categoryDate;
+        this.categoryCreator = categoryCreator;
+        this.categoryParent = categoryParent;
+        this.categoryModifiedDate = categoryModifiedDate;
+    }	
+	
+    public Category(Long id, String categoryName, String categoryDesc, DateTime categoryDate, String categoryCreator, String categoryParent, DateTime categoryModifiedDate) {
+    	this.id = id;
         this.categoryName = categoryName;
         this.categoryDesc = categoryDesc;
         this.categoryCreatedDate = categoryDate;

@@ -3,6 +3,7 @@ package com.riskcare.forums.client.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import com.riskcare.forums.server.vo.CategoryVO;
 import com.vaadin.event.ItemClickEvent;
@@ -18,6 +19,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
@@ -79,7 +81,6 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
     private final VerticalLayout topTreeLayout = new VerticalLayout();
     private final Panel treePanel = new Panel();
     private final VerticalLayout treeLayout = new VerticalLayout();
-    private final Label lblCategoryCaption = new Label("<h3><b>Categories available</b></h3>", ContentMode.HTML);
 
     //Category tree component
     private CategoryTree categoryTree;
@@ -142,7 +143,9 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
     	treeLayout.addComponent(tree);
 
     	topTreeLayout.setHeight("100%");
-    	//topTreeLayout.addComponent(lblCategoryCaption);
+    	topTreeLayout.setCaption("Categories");
+    	topTreeLayout.addStyleName(Runo.LAYOUT_DARKER);
+    	// topTreeLayout.addComponent(lblCategoryCaption);
     	topTreeLayout.addComponent(treePanel);
     	
     	btnCreate.addClickListener(this);
@@ -231,7 +234,7 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
 		
 		selectedCategory = (CategoryVO) event.getItemId();
 		populateCategoryCRUDFields();
-		// refreshPostView();
+		refreshPostView();
 	}
 
 	public void populateCategoryCRUDFields() {
@@ -252,14 +255,29 @@ public class CategoryAndPostView implements Button.ClickListener, ItemClickListe
 		txtDelModDate.setValue(selectedCategory.getCategoryModifiedDate().toString());
 	}
 	
+	@SuppressWarnings("serial")
     @Override
     public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
     	if(event.getSource() == btnCreate) {
     		createCategory();
     	} else if(event.getSource() == btnUpdate) {
-    		updateCategory();
+    		ConfirmDialog.show(UI.getCurrent(), "Confirm update", "Are you sure you want to the update the selected category details?", "Yes", "No", new ConfirmDialog.Listener() {
+				@Override
+				public void onClose(ConfirmDialog dialog) {
+					if(dialog.isConfirmed()) {
+			    		updateCategory();
+					}
+				}
+			});
     	} else if(event.getSource() == btnDelete) {
-    		deleteCategory();
+    		ConfirmDialog.show(UI.getCurrent(), "Confirm deletion", "Are you sure you want to the delete the selected category?", "Yes", "No", new ConfirmDialog.Listener() {
+				@Override
+				public void onClose(ConfirmDialog dialog) {
+					if(dialog.isConfirmed()) {
+			    		deleteCategory();
+					}
+				}
+			});
     	}
     }
     public void createCategory() {

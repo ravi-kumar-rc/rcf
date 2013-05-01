@@ -16,9 +16,6 @@
 package com.riskcare.forums.client;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -27,8 +24,6 @@ import com.github.wolfie.refresher.Refresher;
 import com.google.common.eventbus.EventBus;
 import com.riskcare.forums.client.ui.CategoryTree;
 import com.riskcare.forums.client.ui.PostView;
-import com.riskcare.forums.server.event.UIEvent;
-import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
@@ -52,7 +47,6 @@ public class RCF extends UI
 	private PostView postView;
 	private RCFClientFactory clientFactory;
 	
-	private List<UIEvent> uiEvents = new ArrayList<UIEvent>();
 	private EventBus eventBus;
 	private final Refresher refresher = new Refresher();
 	
@@ -70,28 +64,8 @@ public class RCF extends UI
 		refresher.addListener(categoryTree);
 		refresher.setRefreshInterval(2000);
 		addExtension(refresher);
-		
-		/*TimerTask tt = new TimerTask() {
-			public void run() {
-				LOG.debug("Inside the timer task");
-				uiEvents = clientFactory.getStatusService().getUIUpdates();
-				for(UIEvent event: uiEvents) {
-					if(event.getCategoryVO() != null) {
-						getSession().lock();
-						eventBus.post(new CategoryCRUDEvent());
-						getSession().unlock();
-					}
-				}
-				LOG.debug("End of the timer task");
-			}
-		};
-		
-		LOG.debug("Outside the timer task");
-		
-		Timer t = new Timer();
-		t.scheduleAtFixedRate(tt, 0, 2000);*/
 	}
-
+	
 	public RCFMainView getMainView() {
 		return mainView;
 	}
@@ -100,15 +74,6 @@ public class RCF extends UI
 		this.mainView = mainView;
 	}
 
-	/*
-	public CategoryAndPostView getcategoryAndPostView() {
-		return categoryAndPostView;
-	}
-
-	public void setcategoryAndPostView(CategoryAndPostView categoryAndPostView) {
-		this.categoryAndPostView = categoryAndPostView;
-	}*/
-	
 	public CategoryTree getCategoryTree() {
 		return categoryTree;
 	}
@@ -132,5 +97,4 @@ public class RCF extends UI
 	public void setClientFactory(RCFClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 	}
-
 }

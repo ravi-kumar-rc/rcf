@@ -75,6 +75,7 @@ public class CategoryDAO extends GenericDAO<Category> {
      * @param session
      * 
      */
+    @SuppressWarnings("unchecked")
     public void updateCategory(Category actCategory, Category updCategory) throws Exception {
     	String actualCategoryName = actCategory.getCategoryName();
     	String updatedCategoryName = updCategory.getCategoryName();
@@ -150,4 +151,17 @@ public class CategoryDAO extends GenericDAO<Category> {
         return foundCategory;
     }
     
+    public List<Category> findChildCategories(Category category) {
+    	List<Category> categories = null;
+        try {
+            Session session = getSession();
+            Criteria criteria = session.createCriteria(Category.class);
+            criteria.add(Restrictions.eq("categoryParent",category.getCategoryName()));
+            categories = (List<Category>) criteria.list();
+        } catch(Exception e) {
+            LOG.error(e.getMessage());
+        }
+        return categories;
+    }
+   
 }

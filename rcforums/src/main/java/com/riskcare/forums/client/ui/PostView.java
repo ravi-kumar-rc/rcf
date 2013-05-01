@@ -2,9 +2,10 @@ package com.riskcare.forums.client.ui;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
 
+import com.github.wolfie.refresher.Refresher;
+import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.riskcare.forums.server.container.PostContainerController;
 import com.riskcare.forums.server.vo.CategoryVO;
 import com.riskcare.forums.server.vo.PostVO;
@@ -21,7 +22,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.Runo;
 
 @Scope("session")
-public class PostView implements Button.ClickListener {
+public class PostView implements Button.ClickListener, RefreshListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -83,7 +84,7 @@ public class PostView implements Button.ClickListener {
     	tablePostView.setWidth("100%");
     	tablePostView.setImmediate(true);
     	tablePostView.addStyleName(Runo.TABLE_SMALL);
-    	
+    	/*
     	tablePostView.addContainerProperty("Title", String.class, null);
     	tablePostView.addContainerProperty("Description", String.class, null);
     	tablePostView.addContainerProperty("Created By", String.class, null);
@@ -92,13 +93,13 @@ public class PostView implements Button.ClickListener {
     	tablePostView.addContainerProperty("Last Modified By", String.class, null);
     	tablePostView.addContainerProperty("Last Modified Date", DateTime.class, null);
     	tablePostView.addContainerProperty("Category", CategoryVO.class, null);
-    	
+    	*/
     	refreshPostViewGrid();
     	return tablePostView;
     }
     
     public void refreshPostViewGrid() {
-    	if(selectedCategory != null) {
+    	if(selectedCategory != null ) {
 	    	postContainer = postContainerController.getPostContainer(selectedCategory);
 	    	List<PostVO> posts = postContainer.getItemIds();
 	    	if(posts != null && posts.size() != 0) { 
@@ -113,6 +114,8 @@ public class PostView implements Button.ClickListener {
 		if(event.getSource() == btnCreate) {
 			if(selectedCategory == null) {
 				Notification.show("Error", "No category selected", Notification.Type.ERROR_MESSAGE);
+			} else if(selectedCategory.getCategoryParent() == null) {
+				Notification.show("Info", "Posts cannot be created under the root category", Notification.Type.HUMANIZED_MESSAGE);
 			} else {
 				String postTitle = txtPostTitle.getValue(); 
 				String postDesc = txtPostDesc.getValue(); 
@@ -124,6 +127,12 @@ public class PostView implements Button.ClickListener {
 		}
 	}
 
+	@Override
+	public void refresh(Refresher source) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public PostContainerController getPostContainerController() {
 		return postContainerController;
 	}
@@ -132,5 +141,4 @@ public class PostView implements Button.ClickListener {
 			PostContainerController postContainerController) {
 		this.postContainerController = postContainerController;
 	}
-    
 }

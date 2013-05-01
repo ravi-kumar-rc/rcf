@@ -67,7 +67,7 @@
 	
 	<bean id="eventBus" class="com.google.common.eventbus.EventBus" scope="session"/>
 	
-	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController" scope="session">
+	<bean id="categoryContainerController" class="com.riskcare.forums.server.container.CategoryContainerController">
 		<property name="categoryService" ref="categoryService" />
 		<property name="clientFactory" ref="clientFactory" />
 		<property name="statusService" ref="statusService"></property>
@@ -76,6 +76,7 @@
 	<bean id="postContainerController" class="com.riskcare.forums.server.container.PostContainerController" scope="session">
 		<property name="postService" ref="postService" />
 		<property name="clientFactory" ref="clientFactory" />
+		<property name="statusService" ref="statusService"></property>
 	</bean>
 
 	<bean id="clientFactory" class="com.riskcare.forums.client.RCFClientFactoryImpl">
@@ -107,6 +108,8 @@
 	</bean>
 	
 	<bean id="postService" class="com.riskcare.forums.server.service.PostService">
+		<property name="categoryContainerController" ref="categoryContainerController" />
+		<property name="categoryMapper" ref="categoryMapper" />
 		<property name="categoryDAO" ref="categoryDAO" />
 		<property name="postDAO" ref="postDAO" />
 	</bean>

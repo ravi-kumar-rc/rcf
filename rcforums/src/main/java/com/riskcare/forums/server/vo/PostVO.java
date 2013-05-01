@@ -18,6 +18,7 @@ public class PostVO implements Serializable {
     private String lastModifiedBy;
     private DateTime postModifiedDate;
     private Category postCategory;
+    private DateTime timeToDie;
     
 	public PostVO() {
 		
@@ -98,5 +99,12 @@ public class PostVO implements Serializable {
 	public void setPostCategory(Category postCategory) {
 		this.postCategory = postCategory;
 	}
-	
+
+    public DateTime getTimeToDie() {
+		return timeToDie;
+	}
+
+	public void setTimeToDie(DateTime timeToDie) {
+		this.timeToDie = timeToDie;
+	}
 }

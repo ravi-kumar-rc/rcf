@@ -56,7 +56,7 @@ public class Post {
     
     @ManyToOne()
     @ForeignKey(name="PARENT_CATEGORY_FK")    
-    @JoinColumn(name="PARENT_CATEGORY", nullable=false)
+    @JoinColumn(name="CATEGORY_ID", nullable=false)
     private Category postCategory;
     
     @OneToMany(targetEntity=PostThread.class, mappedBy="threadPost",

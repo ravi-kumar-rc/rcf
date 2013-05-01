@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.google.gwt.user.client.Random;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.SessionDestroyEvent;
 import com.vaadin.server.SessionDestroyListener;
@@ -16,6 +15,7 @@ import com.vaadin.server.SessionInitEvent;
 import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletService;
+import com.vaadin.ui.UI;
 
 public class RCFServlet extends VaadinServlet implements SessionInitListener, SessionDestroyListener {
 	
@@ -73,6 +73,8 @@ public class RCFServlet extends VaadinServlet implements SessionInitListener, Se
     
     @Override
     public void sessionDestroy(SessionDestroyEvent sde) {
+    	LOG.info("Performing clean up before destroying the session");
+    	UI.getCurrent().getSession().close();
     	LOG.info("Session has been destroyed yyyyyyyyyyyyyyyy");
     }
 }

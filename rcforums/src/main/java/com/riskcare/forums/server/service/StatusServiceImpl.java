@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -56,6 +55,13 @@ public class StatusServiceImpl implements StatusService {
                         updates.remove(s);
                         LOG.debug("Updates array size after cleanup : " + updates.size());
                     }
+                    if (value.getPostVO() != null && value.getPostVO().getTimeToDie() != null &&
+                            (DateTime.now()).isAfter(value.getPostVO().getTimeToDie())) {
+                    	String s = entry.getKey();
+                    	LOG.debug("clearUpdates - removing "+s);
+                        updates.remove(s);
+                        LOG.debug("Updates array size after cleanup : " + updates.size());
+                    }                    
                 }
             }
         }
@@ -75,6 +81,6 @@ public class StatusServiceImpl implements StatusService {
         };
 
         //UI Polls every 2 seconds, so we need to have a clearing after this but before 4 seconds.
-        final ScheduledFuture<?> handler = scheduler.scheduleWithFixedDelay(updatesRun, 0, 2, SECONDS);
+        scheduler.scheduleWithFixedDelay(updatesRun, 0, 2, SECONDS);
     }	
 }

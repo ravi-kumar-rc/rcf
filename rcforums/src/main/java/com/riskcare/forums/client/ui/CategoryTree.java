@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Scope;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.riskcare.forums.client.RCFClientFactory;
-import com.riskcare.forums.client.RCFClientFactoryImpl;
 import com.riskcare.forums.server.container.CategoryContainerController;
 import com.riskcare.forums.server.event.UIEvent;
 import com.riskcare.forums.server.vo.CategoryVO;

@@ -102,6 +102,7 @@ public class CategoryService {
     	CategoryVO categoryVO;
     	for(Category category: records) {
     		categoryVO = new CategoryVO();
+    		categoryVO.setId(category.getId());
     		categoryVO.setCategoryName(category.getCategoryName());
     		categoryVO.setCategoryDesc(category.getCategoryDesc());
     		categoryVO.setCategoryCreateDate(category.getCategoryCreateDate());
@@ -112,6 +113,27 @@ public class CategoryService {
     	}
     	
     	return categories;
+    }
+    
+    public synchronized List<CategoryVO> findChildCategories(CategoryVO category) {
+    	List<CategoryVO> categories = new ArrayList<CategoryVO>();
+    	Category parentCategory =  new CategoryMapper().voToEntity(category);
+    	List<Category> records = categoryDAO.findChildCategories(parentCategory);
+    	
+    	CategoryVO categoryVO;
+    	for(Category record: records) {
+    		categoryVO = new CategoryVO();
+    		categoryVO.setId(record.getId().longValue());
+    		categoryVO.setCategoryName(record.getCategoryName());
+    		categoryVO.setCategoryDesc(record.getCategoryDesc());
+    		categoryVO.setCategoryCreateDate(record.getCategoryCreateDate());
+    		categoryVO.setCategoryCreator(record.getCategoryCreator());
+    		categoryVO.setCategoryParent(record.getCategoryParent());
+    		categoryVO.setCategoryModifiedDate(record.getCategoryModifiedDate());
+    		categories.add(categoryVO);
+    	}
+    	
+    	return categories;    	
     }
     
     public void setCategoryDAO(CategoryDAO categoryDAO) {

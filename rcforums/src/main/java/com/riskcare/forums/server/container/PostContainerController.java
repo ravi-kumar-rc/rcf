@@ -3,11 +3,14 @@ package com.riskcare.forums.server.container;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.mortbay.log.Log;
 
 import com.riskcare.forums.client.RCFClientFactory;
 import com.riskcare.forums.server.dao.category.CategoryMapper;
 import com.riskcare.forums.server.entity.Category;
+import com.riskcare.forums.server.event.UIEventMapper;
 import com.riskcare.forums.server.service.PostService;
+import com.riskcare.forums.server.service.StatusService;
 import com.riskcare.forums.server.vo.CategoryVO;
 import com.riskcare.forums.server.vo.PostVO;
 import com.vaadin.data.util.BeanItemContainer;
@@ -18,6 +21,7 @@ public class PostContainerController {
 	
 	private PostService postService;
 	private RCFClientFactory clientFactory;
+	private StatusService statusService;
 	
 	private List<PostVO> posts = null;
 	
@@ -33,12 +37,14 @@ public class PostContainerController {
 		
 		PostVO post = new PostVO(postTitle, postDesc, username, DateTime.now(), postLabel, username, DateTime.now(), category);
 		postService.createPost(post);
+		statusService.setUpdates(category.getCategoryName(), new UIEventMapper().createPostUIEvent(post));
 	}
 
 	public BeanItemContainer<PostVO> getPostContainer(CategoryVO categoryVO) {
 		postContainer.removeAllItems();
 		posts = postService.findAll(categoryVO);
 		postContainer.addAll(posts);
+		Log.info("Number of posts retreived from the DB: " + postContainer.size());
 		return postContainer;
 	}
 
@@ -56,6 +62,14 @@ public class PostContainerController {
 
 	public void setClientFactory(RCFClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
+	}
+
+	public StatusService getStatusService() {
+		return statusService;
+	}
+
+	public void setStatusService(StatusService statusService) {
+		this.statusService = statusService;
 	}
 	
 }
